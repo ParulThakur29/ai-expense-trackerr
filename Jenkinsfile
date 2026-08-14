@@ -31,30 +31,19 @@ pipeline {
             }
         }
 
-        stage('Prepare Environment') {
-            steps {
-                withCredentials([
-                    string(
-                        credentialsId: 'groq-api-key',
-                        variable: 'GROQ_API_KEY'
-                    )
-                ]) {
-                    sh '''
-                        printf "GROQ_API_KEY=%s\\n" "$GROQ_API_KEY" > backend/.env
-                    '''
-                }
-            }
-        }
-
         stage('Validate Docker Compose') {
             steps {
-                sh 'docker compose config'
+                withEnv(['GROQ_API_KEY=dummy-key-for-ci']) {
+                    sh 'docker compose config'
+                }
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker compose build'
+                withEnv(['GROQ_API_KEY=dummy-key-for-ci']) {
+                    sh 'docker compose build'
+                }
             }
         }
     }
@@ -67,9 +56,5 @@ pipeline {
         failure {
             echo 'AI Expense Tracker pipeline failed.'
         }
-
-        always {
-            sh 'rm -f backend/.env'
-        }
     }
-}git add Jenkinsfile
+}
