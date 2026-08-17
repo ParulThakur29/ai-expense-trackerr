@@ -7,6 +7,12 @@ services:
       - "3000:3000"
     env_file:
       - ./backend/.env
+    environment:
+      CHROMA_URL: http://chroma:8000
+    volumes:
+      - ./backend/expenses.db:/app/expenses.db
+    depends_on:
+      - chroma
     restart: unless-stopped
 
   frontend:
@@ -18,3 +24,15 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: expense-tracker-chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/data
+    restart: unless-stopped
+
+volumes:
+  chroma-data:

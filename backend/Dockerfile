@@ -2,9 +2,11 @@ FROM node:22-bookworm
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+
+RUN npm rebuild better-sqlite3 --foreground-scripts
 
 COPY . .
 

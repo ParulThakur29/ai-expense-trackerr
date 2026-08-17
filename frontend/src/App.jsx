@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AIChat from "./components/AIChat";
 import {
   Utensils,
   Car,
@@ -561,6 +562,8 @@ function App() {
           </div>
         </div>
       </div>
+
+      <AIChat />
     </div>
   );
 }
